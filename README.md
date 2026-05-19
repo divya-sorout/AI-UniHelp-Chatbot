@@ -1,39 +1,62 @@
-# AI UniHelp Chatbot 🎓🤖
+# UniHelp- AI University Chatbot for MRU
 
-AI UniHelp is an AI-powered university assistant chatbot developed to help students get instant answers to university-related queries such as admissions, courses, fees, placements, campus facilities, academic support, and events.
+AI UniHelp Chatbot is a full-stack AI-based university assistant developed as a major academic project for Manav Rachna University. It is designed to provide instant responses to student queries related to admissions, courses, fees, placements, campus facilities, and academic information.
 
-Built using modern web technologies, the project focuses on creating a responsive, interactive, and user-friendly experience while demonstrating the practical use of AI in the education sector.
+The system aims to reduce manual effort in student support services by offering a centralized and automated chatbot interface. It improves accessibility, response time, and overall student experience using modern web technologies.
 
----
-
-## ✨ Features
-
-- 🤖 AI-powered chatbot assistant
-- 💬 Real-time student query handling
-- 📚 Admission & academic guidance
-- ⚡ Fast and responsive UI
-- 🔥 Firebase integration & hosting
-- 📱 Mobile-friendly interface
 
 ---
 
-## 🛠️ Tech Stack
+## Project Objectives
 
+- To develop an intelligent chatbot for handling university-related queries
+- To reduce manual effort in student support services
+- To provide instant and accurate information access
+- To design a responsive and user-friendly interface
+- To implement a scalable AI-based web application
+
+---
+
+## Key Features
+
+- AI-powered conversational assistant for university queries
+- Real-time response system for student support
+- Coverage of admissions, courses, fees, placements, and campus information
+- Interactive and responsive user interface
+- Fast and efficient query processing
+- Cloud-based deployment for accessibility
+
+---
+
+## Technology Stack
+
+Frontend:
 - React.js
 - JavaScript
-- HTML5 & CSS3
-- Firebase
-- Supabase
+- HTML5
+- CSS3
+
+Backend / Services:
+- Firebase (Hosting and backend services)
+- Supabase (Authentication and database support)
 
 ---
 
-## 🌐 Live Demo
+## System Description
 
-🚀 https://university-chatbot-73079.web.app/
+The system is designed as a web-based chatbot interface where users can interact through natural language queries. The frontend handles user interaction and displays responses dynamically, while backend services manage authentication, data storage, and deployment.
+
+The architecture ensures modularity, scalability, and ease of maintenance, making it suitable for future enhancements such as advanced AI integration and multi-language support.
 
 ---
 
-## 📂 GitHub Repository
+## Live Demo
+
+https://university-chatbot-73079.web.app/
+
+---
+
+## GitHub Repository
 
 ```bash
 git clone https://github.com/divya-sorout/AI-UniHelp-Chatbot.git
@@ -41,7 +64,7 @@ git clone https://github.com/divya-sorout/AI-UniHelp-Chatbot.git
 
 ---
 
-## ⚙️ Run Locally
+## Installation & Execution
 
 ### Install Dependencies
 
@@ -49,7 +72,7 @@ git clone https://github.com/divya-sorout/AI-UniHelp-Chatbot.git
 npm install
 ```
 
-### Start Development Server
+### Run Development Server
 
 ```bash
 npm start
@@ -57,7 +80,9 @@ npm start
 
 ---
 
-## 🔥 Deployment
+## Deployment
+
+The project is deployed using Firebase Hosting, ensuring global accessibility and reliable performance.
 
 ```bash
 firebase deploy
@@ -65,13 +90,17 @@ firebase deploy
 
 ---
 
-## 👩‍💻 Developed By
+## Future Enhancements
 
-**Divya Sorout**  
-B.Tech CSE (Cybersecurity)
+- Integration of advanced AI/ML models for improved responses
+- Multi-language support for diverse users
+- Voice-based chatbot interaction
+- Student authentication and personalized dashboard
+- Admin analytics panel for query tracking
 
 ---
 
-## 📜 License
+## Developer
 
-This project is created for educational and portfolio purposes.
+Divya Sorout  
+B.Tech CSE (Cybersecurity), Manav Rachna University
