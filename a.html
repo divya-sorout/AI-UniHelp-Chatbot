@@ -1,0 +1,226 @@
+const functions = require("firebase-functions");
+const { WebhookClient } = require("dialogflow-fulfillment");
+const fetch = require("node-fetch");
+
+const admin = require("firebase-admin");
+
+admin.initializeApp();
+
+const db = admin.firestore();
+
+exports.dialogflowFirebaseFulfillment = functions.https.onRequest(async (req, res) => {
+
+  const agent = new WebhookClient({ request: req, response: res });
+
+  // 🎓 COURSE DETAILS
+  async function courseDetails(agent) {
+
+    const spec = agent.parameters.specialization;
+
+    if (!spec) {
+      agent.add("Which specialization details do you want?");
+      return;
+    }
+
+    const doc = await db
+      .collection("courses")
+      .doc("btech")
+      .collection("specializations")
+      .doc(spec.toLowerCase())
+      .get();
+
+    if (!doc.exists) {
+      agent.add("Specialization not found.");
+      return;
+    }
+
+    const data = doc.data();
+
+    agent.add(
+      `📘 ${spec.toUpperCase()} Details\n\n${data.description}`
+    );
+  }
+
+  // 📚 SPECIALIZATIONS
+  async function specialization(agent) {
+
+    const course = agent.parameters.course || "btech";
+
+    const snapshot = await db
+      .collection("courses")
+      .doc(course)
+      .collection("specializations")
+      .get();
+
+    if (snapshot.empty) {
+      agent.add("No specializations found.");
+      return;
+    }
+
+    let specs = [];
+
+    snapshot.forEach(doc => {
+      specs.push(doc.id.toUpperCase());
+    });
+
+    agent.add(
+      `🎓 ${course.toUpperCase()} offers these specializations:\n\n• ${specs.join("\n• ")}`
+    );
+  }
+
+  // 💰 FEES
+  async function askFees(agent) {
+
+    const spec = agent.parameters.specialization;
+
+    if (!spec) {
+      agent.add("Which specialization?");
+      return;
+    }
+
+    const doc = await db
+      .collection("courses")
+      .doc("btech")
+      .collection("specializations")
+      .doc(spec.toLowerCase())
+      .get();
+
+    if (!doc.exists) {
+      agent.add("Specialization not found.");
+      return;
+    }
+
+    const data = doc.data();
+
+    agent.add(
+      `💰 Fees for ${spec.toUpperCase()} are ₹${data.fees}`
+    );
+  }
+
+  // 🎯 PLACEMENTS
+  async function askPlacements(agent) {
+
+    const spec = agent.parameters.specialization;
+
+    if (!spec) {
+      agent.add("Which specialization placements?");
+      return;
+    }
+
+    const doc = await db
+      .collection("courses")
+      .doc("btech")
+      .collection("specializations")
+      .doc(spec.toLowerCase())
+      .get();
+
+    if (!doc.exists) {
+      agent.add("Specialization not found.");
+      return;
+    }
+
+    const data = doc.data();
+
+    agent.add(
+      `🎯 ${spec.toUpperCase()} Placements\n\n` +
+      `📊 Average Package: ${data.avgPackage}\n` +
+      `🏆 Highest Package: ${data.highestPackage}\n` +
+      `🏢 Recruiters: ${data.recruiters}\n\n` +
+      `${data.placements}`
+    );
+  }
+
+  // 🎓 ADMISSION
+  async function askAdmission(agent) {
+
+    const course = agent.parameters.course || "btech";
+
+    const doc = await db
+      .collection("courses")
+      .doc(course)
+      .get();
+
+    if (!doc.exists) {
+      agent.add("Course not found.");
+      return;
+    }
+
+    const data = doc.data();
+
+    agent.add(
+      `🎓 Admission Process for ${data.name}\n\n${data.admission}`
+    );
+  }
+
+  // 🤖 AI FALLBACK
+  async function aiResponse(agent) {
+
+    const userQuery = req.body.queryResult.queryText;
+
+    try {
+
+      const response = await fetch(
+        "https://openrouter.ai/api/v1/chat/completions",
+        {
+          method: "POST",
+
+          headers: {
+            "Authorization": "Bearer YOUR_OPENROUTER_API_KEY",
+            "Content-Type": "application/json"
+          },
+
+          body: JSON.stringify({
+            model: "meta-llama/llama-3-8b-instruct",
+
+            messages: [
+              {
+                role: "system",
+                content:
+                  "You are a university chatbot. Answer in short bullet points."
+              },
+              {
+                role: "user",
+                content: userQuery
+              }
+            ]
+          })
+        }
+      );
+
+      const data = await response.json();
+
+      const reply =
+        data?.choices?.[0]?.message?.content ||
+        "AI not responding.";
+
+      agent.add(reply);
+
+    } catch (error) {
+
+      console.error(error);
+
+      agent.add("AI error. Try again.");
+    }
+  }
+
+  let intentMap = new Map();
+
+  // 🎯 INTENTS
+  intentMap.set("Course Details Intent", courseDetails);
+
+  intentMap.set("ask_specializations", specialization);
+
+  intentMap.set("ask_fees", askFees);
+
+  intentMap.set("ask_placements", askPlacements);
+
+  intentMap.set("ask_admission", askAdmission);
+
+  // 🤖 FALLBACK AI
+  intentMap.set("Default Fallback Intent", aiResponse);
+
+  intentMap.set("Default Welcome Intent", aiResponse);
+
+  agent.handleRequest(intentMap);
+
+});
